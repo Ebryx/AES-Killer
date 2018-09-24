@@ -7,6 +7,9 @@
 
 <img src="https://i.imgur.com/Jc9c6lp.png" />
 
+### How to Install
+		Download jar file from <a href="https://github.com/EbryxLabs/AES-Killer/releases/download/1.0/AES_Killer.jar">here</a> and add in burpsuite
+
 ### Requirements
 - Burpsuite
 - Java
@@ -18,3 +21,8 @@
 - xubuntu 18.04
 - Kali Linux 2018
 
+### Working PoC
+
+<img src="https://i.imgur.com/QknOXGD.png" />
+
+<img src="https://i.imgur.com/Pwrnvbv.png" />
