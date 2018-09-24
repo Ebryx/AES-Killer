@@ -8,7 +8,7 @@
 <img src="https://i.imgur.com/Jc9c6lp.png" />
 
 ### How to Install
-		Download jar file from "https://github.com/EbryxLabs/AES-Killer/releases/download/1.0/AES_Killer.jar" and add in burpsuite
+    Download jar file from "https://github.com/EbryxLabs/AES-Killer/releases/download/1.0/AES_Killer.jar" and add in burpsuite
 
 ### Requirements
 - Burpsuite
