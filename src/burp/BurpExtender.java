@@ -33,6 +33,9 @@ public class BurpExtender implements IBurpExtender, ITab, IProxyListener, IHttpL
     public String reqParameter = null;
     public String resPrarameter = null;
     public Boolean decResponse = false;
+    public Boolean isOffusicated = false;
+    public String[] offusicatedChar = null;
+    public String[] replaceWithChar = null;
     
     @Override
     public void registerExtenderCallbacks(IBurpExtenderCallbacks callbacks)
@@ -44,6 +47,7 @@ public class BurpExtender implements IBurpExtender, ITab, IProxyListener, IHttpL
         
         myPanel = new MainPanel(this);
         this.callbacks.addSuiteTab(this);
+        this.stdout.println("AES Killer Installed");
     }
 
     @Override
@@ -62,18 +66,16 @@ public class BurpExtender implements IBurpExtender, ITab, IProxyListener, IHttpL
             IHttpRequestResponse messageInfo = message.getMessageInfo();
             IRequestInfo reqInfo = helpers.analyzeRequest(messageInfo);
             List headers = reqInfo.getHeaders();
-            headers.add("AES-Killer: myheader==");
             String request = new String(messageInfo.getRequest());
             String URL = new String(reqInfo.getUrl().toString());
             if (URL.contains(this.reqURL)){
-                stdout.println(URL);
                 String messageBody = request.substring(reqInfo.getBodyOffset());                
                 if ( !this.reqParameter.equals("") && messageBody.startsWith(this.reqParameter)){
                     String arr[] = messageBody.split(this.reqParameter);
                     messageBody = arr[1].substring(0, arr[1].length()-1);
                 }
                 messageBody = removeNull(messageBody);
-                messageBody = removeOff(messageBody);
+                if(this.isOffusicated){messageBody = removeOff(messageBody);}
                 messageBody = doDecrypt(messageBody);
                 byte[] updateMessage = helpers.buildHttpMessage(headers, messageBody.getBytes());
                 messageInfo.setRequest(updateMessage);
@@ -83,23 +85,18 @@ public class BurpExtender implements IBurpExtender, ITab, IProxyListener, IHttpL
         else {
             
             if (this.decResponse != true){
-                stdout.println("----  in if --------------");
                 return;
             }
-            stdout.println("----  not in if --------------");
             IHttpRequestResponse messageInfo = message.getMessageInfo();
             IRequestInfo reqInfo = helpers.analyzeRequest(messageInfo);
             String URL = new String(reqInfo.getUrl().toString());
             if (URL.contains(this.reqURL)){
                 IResponseInfo resInfo = helpers.analyzeResponse(messageInfo.getResponse());
                 List headers = resInfo.getHeaders();
-                headers.add("AES-Killer: myheader==");
                 String response = new String(messageInfo.getResponse());
                 String params = new String(response.substring(resInfo.getBodyOffset()));
                 try{
                     params = doDecrypt(params);
-                    stdout.println( params.length() + ": " + params);
-                    stdout.println("------------------");
                     byte[] updateMessage = helpers.buildHttpMessage(headers, params.getBytes());
                     messageInfo.setResponse(updateMessage);
                 }
@@ -140,7 +137,11 @@ public class BurpExtender implements IBurpExtender, ITab, IProxyListener, IHttpL
     public String removeOff(String paramString)
     {
         if (paramString != null) {
-          return paramString.replace("-", "+").replace("_", "/").replace(",", "=");
+          for(int i =0; i< this.offusicatedChar.length; i++){
+              paramString = paramString.replace(this.replaceWithChar[i], this.offusicatedChar[i]);
+          }
+//          return paramString.replace("-", "+").replace("_", "/").replace(",", "=");
+          return paramString;
         }
         return null;
     }
@@ -148,7 +149,11 @@ public class BurpExtender implements IBurpExtender, ITab, IProxyListener, IHttpL
     public String doOff(String paramString)
     {
         if (paramString != null) {
-          return paramString.replace("+", "-").replace("/", "_").replace("=", ",");
+          for(int i =0; i< this.offusicatedChar.length; i++){
+              paramString = paramString.replace(this.offusicatedChar[i], this.replaceWithChar[i]);
+          }
+//          return paramString.replace("+", "-").replace("/", "_").replace("=", ",");
+          return paramString;
         }
         return null;
     }
@@ -156,49 +161,38 @@ public class BurpExtender implements IBurpExtender, ITab, IProxyListener, IHttpL
     @Override
     public void processHttpMessage(int toolFlag, boolean messageIsRequest, IHttpRequestResponse messageInfo) {
         if (messageIsRequest){
-//            IHttpRequestResponse messageInfo = message.getMessageInfo();
             IRequestInfo reqInfo = helpers.analyzeRequest(messageInfo);
             List headers = reqInfo.getHeaders();
-            headers.add("AES-Killer: myheader==");
             String request = new String(messageInfo.getRequest());
             String URL = new String(reqInfo.getUrl().toString());
             if (URL.contains(this.reqURL)){
-                stdout.println(URL);
-                String messageBody = request.substring(reqInfo.getBodyOffset());
-                if (messageBody.startsWith(this.reqParameter)){
+                String messageBody = request.substring(reqInfo.getBodyOffset());                
+                if ( !this.reqParameter.equals("") && messageBody.startsWith(this.reqParameter)){
                     String arr[] = messageBody.split(this.reqParameter);
-                    String params = arr[1].substring(0, arr[1].length()-1);
-                    params = removeNull(params);
-                    params = removeOff(params);
-                    params = doDecrypt(params);
-                    stdout.println(params);
-                    stdout.println("----------------");
-                    byte[] updateMessage = helpers.buildHttpMessage(headers, params.getBytes());
-                    messageInfo.setRequest(updateMessage);   
-                }                
+                    messageBody = arr[1].substring(0, arr[1].length()-1);
+                }
+                messageBody = removeNull(messageBody);
+                if(this.isOffusicated){messageBody = removeOff(messageBody);}
+                messageBody = doDecrypt(messageBody);
+                byte[] updateMessage = helpers.buildHttpMessage(headers, messageBody.getBytes());
+                messageInfo.setRequest(updateMessage);
             }
             
         }
         else {
             
             if (this.decResponse != true){
-                stdout.println("----  in if --------------");
                 return;
             }
-            stdout.println("----  not in if --------------");
-//            IHttpRequestResponse messageInfo = message.getMessageInfo();
             IRequestInfo reqInfo = helpers.analyzeRequest(messageInfo);
             String URL = new String(reqInfo.getUrl().toString());
             if (URL.contains(this.reqURL)){
                 IResponseInfo resInfo = helpers.analyzeResponse(messageInfo.getResponse());
                 List headers = resInfo.getHeaders();
-                headers.add("AES-Killer: myheader==");
                 String response = new String(messageInfo.getResponse());
                 String params = new String(response.substring(resInfo.getBodyOffset()));
                 try{
                     params = doDecrypt(params);
-                    stdout.println( params.length() + ": " + params);
-                    stdout.println("------------------");
                     byte[] updateMessage = helpers.buildHttpMessage(headers, params.getBytes());
                     messageInfo.setResponse(updateMessage);
                 }
