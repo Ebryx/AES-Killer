@@ -21,7 +21,7 @@
 - Decrypt AES Encrypted traffic on proxy tab 
 - Decrypt AES Encrypted traffic on proxy, scanner, repeater and intruder
 
-***NOTE:*** Currently support `AES/CBC/PKCS5Padding` encryption/decryption
+***NOTE:*** Currently support `AES/CBC/PKCS5Padding` encryption/decryption. Not generic yet (have to modify depending upon the application behavior).
 
 ### How it works
 - Require AES Encryption Key (Can be obtained by reversing mobile app)
