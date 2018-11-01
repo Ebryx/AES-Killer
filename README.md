@@ -21,18 +21,18 @@
 - Decrypt AES Encrypted traffic on proxy tab 
 - Decrypt AES Encrypted traffic on proxy, scanner, repeater and intruder
 
-***NOTE:*** Currently support `AES/CBC/PKCS5Padding` encryption/decryption. Not generic yet (have to modify depending upon the application behavior).
+***NOTE:*** Currently support `AES/CBC/PKCS5Padding` encryption/decryption.
 
 ### How it works
-- Require AES Encryption Key (Can be obtained by reversing mobile app)
-- Require AES Encryption Initialize Vector (Can be obtained by reversing mobile app)
+- Require AES Encryption Key (Can be obtained by using frida or reversing mobile app)
+- Require AES Encryption Initialize Vector (Can be obtained by using frida or reversing mobile app)
 - Request Parameter (Leave blank in case of whole request body)
 - Response Parameter (Leave blank in case of whole response body)
 - Character Separated with space for obfuscation on request/response 
 - URL/Host of target to filter request and response
 
 ### How to Install
-<pre>Download jar file from <a href="https://github.com/Ebryx/AES-Killer/releases/download/2.0/AES_Killer.jar" target="_blank">Release</a> and add in burpsuite</pre>
+<pre>Download jar file from <a href="https://github.com/Ebryx/AES-Killer/releases/download/3.0/AES_Killer.jar" target="_blank">Release</a> and add in burpsuite</pre>
 
 <img src="https://i.imgur.com/tAsxDnx.gif" />
 
