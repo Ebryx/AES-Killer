@@ -3,7 +3,7 @@
 [![GitHub version](https://d25lcipzij17d.cloudfront.net/badge.svg?id=gh&type=0.3&v=3.0&x2=0)](http://badge.fury.io/gh/boennemann%2Fbadges)
 [![Open Source Love](https://badges.frapsoft.com/os/mit/mit.svg?v=102)](https://github.com/ellerbrock/open-source-badge/)
 
-**Burpsuite Plugin to decrypt AES Encrypted traffic on fly**
+**Burpsuite Plugin to decrypt AES Encrypted traffic on the fly**
 
 <img src="https://i.imgur.com/7IQbJaz.png" />
 
