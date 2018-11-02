@@ -25,7 +25,7 @@
 
 ### How it works
 - Require AES Encryption Key (Can be obtained by using <a href="https://gist.github.com/d3vilbug/41deacfe52a476d68d6f21587c5f531d" target="_blank">frida script</a> or reversing mobile app)
-- Require AES Encryption Initialize Vector (Can be obtained by using<a href="https://gist.github.com/d3vilbug/41deacfe52a476d68d6f21587c5f531d" target="_blank">frida script</a> or reversing mobile app)
+- Require AES Encryption Initialize Vector (Can be obtained by using <a href="https://gist.github.com/d3vilbug/41deacfe52a476d68d6f21587c5f531d" target="_blank">frida script</a> or reversing mobile app)
 - Request Parameter (Leave blank in case of whole request body)
 - Response Parameter (Leave blank in case of whole response body)
 - Character Separated with space for obfuscation on request/response (In case of Offuscation) 
