@@ -48,7 +48,7 @@
 
 ### Decrypt Request/Response
 - Provide SecretSpecKey under `Secret Key` field
-- Procide IV under `Initialize Vector` field
+- Provide IV under `Initialize Vector` field
 - Provide Host/URL to filter request and response for encryption and decryption
 - Press `Start AES Killer`
 
