@@ -33,7 +33,7 @@
 
 ### Variants
 - AES_Killer for JSON request <a href="https://gist.github.com/d3vilbug/853d6823a015cfe20656bd24ad8dd410" target="_blank">AES_Killer-JSON.java</a>
-- AES_Killer for random/alternate Parameters on different endpoints <a href="https://gist.github.com/d3vilbug/391cc26b27de37e49f5e75682f65ed5b" target="_blank">AES_Killer-JSON.java</a>
+- AES_Killer for random/alternate Parameters on different endpoints <a href="https://gist.github.com/d3vilbug/391cc26b27de37e49f5e75682f65ed5b" target="_blank">AES_Killer-Parameters.java</a>
 
 ***AES_Killer-Parameters.java:*** Let's say if application enforcing encryption on few parameters in request and these parameters will change every time with respect to  endpoint/request so all you need to do is as follow
 <pre>
