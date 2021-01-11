@@ -31,6 +31,20 @@
 - Character Separated with space for obfuscation on request/response (In case of Offuscation) 
 - URL/Host of target to decrypt/encrypt request and response
 
+### Variants
+- AES_Killer for JSON request <a href="https://gist.github.com/d3vilbug/853d6823a015cfe20656bd24ad8dd410" target="_blank">AES_Killer-JSON.java</a>
+- AES_Killer for random/alternate Parameters on different endpoints <a href="https://gist.github.com/d3vilbug/391cc26b27de37e49f5e75682f65ed5b" target="_blank">AES_Killer-JSON.java</a>
+
+***AES_Killer-Parameters.java:*** Let's say if application enforcing encryption on few parameters in request and these parameters will change every time with respect to  endpoint/request so all you need to do is as follow
+<pre>
+- Add endpoints by adding <code><bold>this.endpoints.add("abc");</bold></code> in registerExtenderCallbacks function
+- Add parameters which will be encrypted in `String[][] parameters`
+- Add rest of parameter in grant_type or make blank entry
+</pre>
+and let the code do the magic for you.
+
+***NOTE:*** These variant will not work for you directly due to nature of your request so might need little tweaking.
+
 ### How to Install
 <pre>Download jar file from <a href="https://github.com/Ebryx/AES-Killer/releases/download/3.0/AES_Killer.jar" target="_blank">Release</a> and add in burpsuite</pre>
 
