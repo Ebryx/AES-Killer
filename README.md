@@ -43,6 +43,18 @@
 </pre>
 and let the code do the magic for you.
 
+- AES_Killer_v3.0 a generic variant for alternate parameters on different endpoints with GET, POST (JSON, Form) support <a href="https://gist.github.com/d3vilbug/0a55139c24b183b36dd1d4e9fa2658e0" target="_blank">AES_Killer_v3.0.java</a>
+
+***AES_Killer_v3.0.java:*** This variant is generic and can deal with any type of request format i-e GET, POST(Form, JSON) with alternate parameters on different endpoints
+<pre>
+- Clone the project and replace the BurpExtender.java with AES_Killer_v3.0.java code
+- Modify the endpoints and parameters of each request type in order as shown below
+- Update SecretKey and IV parameters and other required methods
+- Build the project and you are good to go
+<pre>
+
+<img src="https://i.imgur.com/1mpZeEg.png" />
+
 ***NOTE:*** These variant will not work for you directly due to nature of your request so might need little tweaking.
 
 ### How to Install
