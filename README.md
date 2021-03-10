@@ -51,7 +51,7 @@ and let the code do the magic for you.
 - Modify the endpoints and parameters of each request type in order as shown below
 - Update SecretKey and IV parameters and other required methods
 - Build the project and you are good to go
-<pre>
+</pre>
 
 <img src="https://i.imgur.com/1mpZeEg.png" />
 
