@@ -56,7 +56,7 @@ and let the code do the magic for you.
 <img src="https://i.imgur.com/1mpZeEg.png" />
 
 
-- <a href="https://gist.github.com/d3vilbug/0225423e124605f9eb58d439fcc50234" target="_blank">AES_Killer_v4.0.java</a> for multi-level encryption on request (Support Form, JSON and XML formats)
+- <a href="https://gist.github.com/d3vilbug/0225423e124605f9eb58d439fcc50234" target="_blank">AES_Killer_v4.0.java</a> for multi-level encryption on request _(Support Form, JSON and XML formats)_
 
 ***AES_Killer_v4.0.java:*** This variant is for Multi-Level encryption where application is encrypting few request parameters with one key and later on encrypting the whole request body with another key
 <pre>
