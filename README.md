@@ -31,7 +31,7 @@
 - Character Separated with space for obfuscation on request/response (In case of Offuscation) 
 - URL/Host of target to decrypt/encrypt request and response
 
-### Variants
+## Variants
 - AES_Killer for JSON request <a href="https://gist.github.com/d3vilbug/853d6823a015cfe20656bd24ad8dd410" target="_blank">AES_Killer-JSON.java</a>
 - AES_Killer for random/alternate Parameters on different endpoints <a href="https://gist.github.com/d3vilbug/391cc26b27de37e49f5e75682f65ed5b" target="_blank">AES_Killer-Parameters.java</a>
 
@@ -55,7 +55,20 @@ and let the code do the magic for you.
 
 <img src="https://i.imgur.com/1mpZeEg.png" />
 
-***NOTE:*** These variant will not work for you directly due to nature of your request so might need little tweaking.
+
+- <a href="https://gist.github.com/d3vilbug/0225423e124605f9eb58d439fcc50234" target="_blank">AES_Killer_v4.0.java</a> for multi-level encryption on JSON or XML requests
+
+***AES_Killer_v4.0.java:*** This variant is for Multi-Level encryption where application is encrypting few request parameters with one key and later on encrypting the whole request body with another key
+<pre>
+- Clone the project and replace the BurpExtender.java with AES_Killer_v4.0.java code
+- Modify the endpoints and parameters as shown below
+- Update Secret Keys and other required methods
+- Build the project and add jar file to your extender
+</pre>
+
+<img src="https://i.imgur.com/JVDhKLX.png" />
+
+***NOTE:*** These variants will not work for you directly due to nature of your request so might need little tweaking.
 
 ### How to Install
 <pre>Download jar file from <a href="https://github.com/Ebryx/AES-Killer/releases/download/3.0/AES_Killer.jar" target="_blank">Release</a> and add in burpsuite</pre>
