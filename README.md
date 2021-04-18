@@ -9,7 +9,6 @@
 
 ### Requirements
 - Burpsuite
-- Java
 
 ### Tested on
 - Burpsuite 2021.4
@@ -25,10 +24,14 @@
 ### How it works
 - Require AES Encryption Key (Can be obtained by using <a href="https://gist.github.com/d3vilbug/41deacfe52a476d68d6f21587c5f531d" target="_blank">frida script</a> or reversing mobile app)
 - Require AES Encryption Initialize Vector (Can be obtained by using <a href="https://gist.github.com/d3vilbug/41deacfe52a476d68d6f21587c5f531d" target="_blank">frida script</a> or reversing mobile app)
-- Request Parameter (Leave blank in case of whole request body)
-- Response Parameter (Leave blank in case of whole response body)
-- Character Separated with space for obfuscation on request/response (In case of Offuscation) 
-- URL/Host of target to decrypt/encrypt request and response
+- A detailed guide can find in <a href="https://github.com/Ebryx/AES-Killer/wiki" target=_blank>Wiki Section</a>
+
+### How to Build
+```
+$ git clone https://github.com/Ebryx/AES-Killer/
+$ cd AES-Killer
+$ ./gradlew clean build
+```
 
 ## Variants
 - AES_Killer for JSON request <a href="https://gist.github.com/d3vilbug/853d6823a015cfe20656bd24ad8dd410" target="_blank">AES_Killer-JSON.java</a>
