@@ -5,23 +5,22 @@
 
 **Burpsuite Plugin to decrypt AES Encrypted traffic on the fly**
 
-<img src="https://i.imgur.com/7IQbJaz.png" />
+<img src="https://i.imgur.com/LKYQMoj.png" />
 
 ### Requirements
 - Burpsuite
 - Java
 
 ### Tested on
-- Burpsuite 1.7.36
-- Windows 10
-- xubuntu 18.04
-- Kali Linux 2018
+- Burpsuite 2021.4
+- Windows 10 
+- Ubuntu & PopOS
 
 ### What it does
 - The IProxyListener decrypt requests and encrypt responses, and an IHttpListener than encrypt requests and decrypt responses. 
 - Burp sees the decrypted traffic, including Repeater, Intruder and Scanner, but the client/mobile app and server see the encrypted version.
 
-***NOTE:*** Currently support `AES/CBC/PKCS5Padding` encryption/decryption.
+***NOTE:*** Currently support `AES/CBC/PKCS5Padding` && `AES/ECB/PKCS5Padding` encryption/decryption.
 
 ### How it works
 - Require AES Encryption Key (Can be obtained by using <a href="https://gist.github.com/d3vilbug/41deacfe52a476d68d6f21587c5f531d" target="_blank">frida script</a> or reversing mobile app)
