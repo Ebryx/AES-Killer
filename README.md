@@ -24,7 +24,8 @@
 ### How it works
 - Require AES Encryption Key (Can be obtained by using <a href="https://gist.github.com/d3vilbug/41deacfe52a476d68d6f21587c5f531d" target="_blank">frida script</a> or reversing mobile app)
 - Require AES Encryption Initialize Vector (Can be obtained by using <a href="https://gist.github.com/d3vilbug/41deacfe52a476d68d6f21587c5f531d" target="_blank">frida script</a> or reversing mobile app)
-- A detailed guide can find in <a href="https://github.com/Ebryx/AES-Killer/wiki" target=_blank>Wiki Section</a>
+- A detailed usage guide can be found at <a href="https://n00b.sh/posts/aes_killer-usage-guide/" target=_blank>Usage Guide</a>
+- Also, to learn how to Decrypt a Mobile App traffic using AES Killer and Frida <a href="https://n00b.sh/posts/aes-killer-mobile-app-demo/" target=_blank>Read this</a>
 
 ### How to Build
 ```
