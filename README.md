@@ -22,12 +22,11 @@
 ***NOTE:*** Currently support `AES/CBC/PKCS5Padding` && `AES/ECB/PKCS5Padding` encryption/decryption.
 
 ### How it works
-- Require AES Encryption Key (Can be obtained by using <a href="https://gist.github.com/d3vilbug/41deacfe52a476d68d6f21587c5f531d" target="_blank">frida script</a> or reversing mobile app)
-- Require AES Encryption Initialize Vector (Can be obtained by using <a href="https://gist.github.com/d3vilbug/41deacfe52a476d68d6f21587c5f531d" target="_blank">frida script</a> or reversing mobile app)
-- A detailed usage guide can be found at <a href="https://n00b.sh/posts/aes_killer-usage-guide/" target=_blank>Usage Guide</a>
-- Also, to learn how to Decrypt a Mobile App traffic using AES Killer and Frida <a href="https://n00b.sh/posts/aes-killer-mobile-app-demo/" target=_blank>Read this</a>
+- Require **Secret Key** and **Initialize Vector** which can be obtained by using <a href="https://github.com/d3vilbug/demo-example-code-snippets/blob/master/AES_Killer%20-%20Mobile%20App%20Demo/aes-hook.js" target="_blank">aes-hook.js</a> and <a href="https://github.com/d3vilbug/demo-example-code-snippets/blob/master/AES_Killer%20-%20Mobile%20App%20Demo/frida-hook.py" target=_blank>frida-hook.py</a> or by reversing the application
+- A detailed usage guide can be found at <a href="https://n00b.sh/posts/aes_killer-usage-guide/" target=_blank>AES Killer - Usage Guide</a>
+- This article will help you in <a href="https://n00b.sh/posts/aes-killer-mobile-app-demo/" target=_blank>Decrypting Mobile App Traffic using AES Killer and Frida</a>
 
-### How to Build
+### How to Build 
 ```
 $ git clone https://github.com/Ebryx/AES-Killer/
 $ cd AES-Killer
@@ -79,21 +78,41 @@ and let the code do the magic for you.
 <img src="https://i.imgur.com/6DS04gb.gif" />
 
 ### Original Request/Response
-<img src="https://i.imgur.com/ocznHPa.gif" />
+<img src="https://i.imgur.com/pr8uLv8.gif" />
 
 ### Getting AES Encryption Key and IV
 - First setup frida server on <a href="https://www.frida.re/docs/ios/" target="_blank">IOS</a> and <a href="https://www.frida.re/docs/android/" target="_blank">Android</a> device.
 - Launch Application on mobile device.
-- Run this <a href="https://gist.github.com/d3vilbug/41deacfe52a476d68d6f21587c5f531d" target="_blank">frida script</a> on your host machine to get AES Encryption Key and IV.
+- Run <a href="https://github.com/d3vilbug/demo-example-code-snippets/blob/master/AES_Killer%20-%20Mobile%20App%20Demo/aes-hook.js" target="_blank">aes-hook.js</a> and <a href="https://github.com/d3vilbug/demo-example-code-snippets/blob/master/AES_Killer%20-%20Mobile%20App%20Demo/frida-hook.py" target=_blank>frida-hook.py</a> on your host machine to get AES Encryption Key and IV as shown in <a href="https://n00b.sh/posts/aes-killer-mobile-app-demo/" target=_blank>this post</a>.
 
-<img src="https://i.imgur.com/NOLlQcy.gif" />
+<img src="https://i.imgur.com/Bwi17Bb.gif" />
 
-### Decrypt Request/Response
+### Decrypt Request and Response
 - Provide SecretSpecKey under `Secret Key` field
 - Provide IV under `Initialize Vector` field
 - Provide Host/URL to filter request and response for encryption and decryption
+- Select appropriate Request and Response options
 - Press `Start AES Killer`
 
-<img src="https://i.imgur.com/Eyukxhs.gif" />
+<img src="https://i.imgur.com/JfrH65u.gif" />
+
+
+### AES Killer with Repeater, Intruder and Scanner
+Once we start AES Killer, it takes control of Burp `IHttpListener.processHttpMessage` which is responsible for handling all outgoing and incoming traffic and AES Killer do the following
+
+- Before sending the final request to a server, `ProcessHttpMessage` encrypt the request 
+- Upon receiving a response,  `ProcessHttpMessage` decrypt the response first before showing it to us
+
+So we'll only be getting the Plain Text Response and can play with Plain Text request.
+
+<img src="https://i.imgur.com/MVhBHcS.gif">
+
+
+
+### Manual Encryption and Decryption 
+We can also manually encrypt and decrypt strings using AES Killer. Let's take an encrypted string from the request `TYROd49FWJjYBfv02oiUzwRQgxWMWiw4W3oCqvNf8h3bnb7X0bobypFzMt797CYU` and decrypt it using AES Killer. Similarly, we can perform the encryption too.
+
+<img src="https://i.imgur.com/rjWDACt.gif">
+
 
 <pre>Download Demo App from <a href="https://github.com/11x256/frida-android-examples/blob/master/examples/5/app-release.apk" target="_blank">here</a></pre>
