@@ -22,7 +22,7 @@
 ***NOTE:*** Currently support `AES/CBC/PKCS5Padding` && `AES/ECB/PKCS5Padding` encryption/decryption.
 
 ### How it works
-- Require **Secret Key** and **Initialize Vector** which can be obtained by using <a href="https://github.com/d3vilbug/demo-example-code-snippets/blob/master/AES_Killer%20-%20Mobile%20App%20Demo/aes-hook.js" target="_blank">aes-hook.js</a> and <a href="https://github.com/d3vilbug/demo-example-code-snippets/blob/master/AES_Killer%20-%20Mobile%20App%20Demo/frida-hook.py" target=_blank>frida-hook.py</a> or by reversing the application
+- Require **Secret Key** and **Initialize Vector** which can be obtained by using <a href="https://github.com/d3vilbug/demo-example-code-snippets/blob/master/AES_Killer%20-%20Mobile%20App%20Demo/aes-hook.js" target="_blank">aes-hook.js</a> and <a href="https://github.com/d3vilbug/demo-example-code-snippets/blob/master/AES_Killer%20-%20Mobile%20App%20Demo/frida-hook.py" target=_blank>frida-hook.py</a> or by reversing the application (For iOS please use <a href="https://github.com/noobpk/frida-ios-hook">Frida iOS Hook</a> to get AES Secret Key and IV)
 - A detailed usage guide can be found at <a href="https://n00b.sh/posts/aes_killer-usage-guide/" target=_blank>AES Killer - Usage Guide</a>
 - This article will help you in <a href="https://n00b.sh/posts/aes-killer-mobile-app-demo/" target=_blank>Decrypting Mobile App Traffic using AES Killer and Frida</a>
 
