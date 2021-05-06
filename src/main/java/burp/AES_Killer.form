@@ -102,7 +102,7 @@
                               </Group>
                               <Component id="jLabel8" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="430" max="32767" attributes="0"/>
+                          <EmptySpace pref="434" max="32767" attributes="0"/>
                           <Component id="jPanel12" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Component id="jPanel10" min="-2" max="-2" attributes="0"/>
@@ -305,7 +305,7 @@
                   <SubComponents>
                     <Component class="javax.swing.JCheckBox" name="jCheckBox8">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="Do / Remove Obfusication"/>
+                        <Property name="text" type="java.lang.String" value="Do / Remove Obfuscation"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="jCheckBox13">

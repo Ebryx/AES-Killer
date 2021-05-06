@@ -203,7 +203,7 @@ public class AES_Killer extends javax.swing.JPanel {
 
         jPanel12.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
-        jCheckBox8.setText("Do / Remove Obfusication");
+        jCheckBox8.setText("Do / Remove Obfuscation");
 
         jCheckBox13.setText("Enable Debug Mode");
         jCheckBox13.setName("isDebug"); // NOI18N
@@ -254,7 +254,7 @@ public class AES_Killer extends javax.swing.JPanel {
                             .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addComponent(jTextField7))
                     .addComponent(jLabel8))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 430, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 434, Short.MAX_VALUE)
                 .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
