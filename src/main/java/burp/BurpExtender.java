@@ -8,10 +8,14 @@ package burp;
 import java.awt.Component;
 import java.io.PrintWriter;
 import java.net.URL;
+import java.security.Security;
 import java.util.List;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+
 
 /**
  *
@@ -21,7 +25,7 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener, IProxyL
     
     public String ExtensionName =  "AES Killer";
     public String TabName =  "AES Killer";
-    public String _Header = "AES: Killer";
+    public String _Header = "Aes: Killer";
     AES_Killer _aes_killer;
     
     public IBurpExtenderCallbacks callbacks;
@@ -138,8 +142,12 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener, IProxyL
     
     public String do_decrypt(String _enc_str){
         try{
+            Security.addProvider(new BouncyCastleProvider());
             cipher = Cipher.getInstance(this._enc_type);
-            sec_key = new SecretKeySpec(this.helpers.base64Decode(this._secret_key),"AES");
+            //sec_key = new SecretKeySpec(this.helpers.base64Decode(this._secret_key),"AES");
+            //sec_key = new SecretKeySpec(this.helpers.base64Decode(this._secret_key),"GOST3412-2015");
+	    String alg = this._enc_type.split("/")[0];
+            sec_key = new SecretKeySpec(this.helpers.base64Decode(this._secret_key),alg);
             
             if (this._exclude_iv){
                 cipher.init(Cipher.DECRYPT_MODE, sec_key);
@@ -163,7 +171,10 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener, IProxyL
     public String do_encrypt(String _dec_str){
         try{
             cipher = Cipher.getInstance(this._enc_type);
-            sec_key = new SecretKeySpec(this.helpers.base64Decode(this._secret_key),"AES");
+            //sec_key = new SecretKeySpec(this.helpers.base64Decode(this._secret_key),"GOST3412-2015");
+            //sec_key = new SecretKeySpec(this.helpers.base64Decode(this._secret_key),"AES");
+	    String alg = this._enc_type.split("/")[0];
+            sec_key = new SecretKeySpec(this.helpers.base64Decode(this._secret_key),alg);
             
             if (this._exclude_iv){
                 cipher.init(Cipher.ENCRYPT_MODE, sec_key);

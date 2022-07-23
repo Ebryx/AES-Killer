@@ -11,10 +11,12 @@ repositories {
 
 dependencies {
     implementation 'net.portswigger.burp.extender:burp-extender-api:2.1'
+    implementation 'org.bouncycastle:bcprov-jdk15on:1.68'
 }
 
 jar {
     from {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
+    exclude("META-INF/BC1024KE.DSA","META-INF/BC1024KE.SF","META-INF/BC2048KE.DSA","META-INF/BC2048KE.SF")
 }

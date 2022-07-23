@@ -254,7 +254,7 @@ public class AES_Killer extends javax.swing.JPanel {
                             .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addComponent(jTextField7))
                     .addComponent(jLabel8))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 434, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 430, Short.MAX_VALUE)
                 .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -292,7 +292,7 @@ public class AES_Killer extends javax.swing.JPanel {
 
         jLabel1.setText("Select Encryption");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "AES/CBC/PKCS5Padding", "AES/ECB/PKCS5Padding" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "AES/CBC/PKCS5Padding", "AES/ECB/PKCS5Padding", "GOST3412-2015/ECB/PKCS7Padding" }));
         jComboBox1.setName("encryption_type"); // NOI18N
 
         jLabel2.setText("Secret Key (Base64 Encoded)");
@@ -403,13 +403,14 @@ public class AES_Killer extends javax.swing.JPanel {
 
         jTextField3.setName("req_parameter"); // NOI18N
 
-        buttonGroup3.add(jCheckBox6);
+        //buttonGroup3.add(jCheckBox6);
         jCheckBox6.setText("Override Complete request body (After decrypting - Form)");
         jCheckBox6.setName("override_req"); // NOI18N
 
-        buttonGroup3.add(jCheckBox16);
+        //buttonGroup3.add(jCheckBox16);
         jCheckBox16.setText("Override Complete request body (After decrypting - JSON)");
         jCheckBox16.setName("override_req"); // NOI18N
+
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -461,7 +462,7 @@ public class AES_Killer extends javax.swing.JPanel {
 
         jTextField4.setName("req_parameter"); // NOI18N
 
-        buttonGroup4.add(jCheckBox7);
+        //buttonGroup4.add(jCheckBox7);
         jCheckBox7.setText("Override Complete response body (After decrypting - Form)");
         jCheckBox7.setName("override_res"); // NOI18N
         jCheckBox7.addActionListener(new java.awt.event.ActionListener() {
@@ -473,7 +474,7 @@ public class AES_Killer extends javax.swing.JPanel {
         buttonGroup1.add(jCheckBox15);
         jCheckBox15.setText("Ignore Response");
 
-        buttonGroup4.add(jCheckBox17);
+        //buttonGroup4.add(jCheckBox17);
         jCheckBox17.setText("Override Complete response body (After decrypting - JSON)");
         jCheckBox17.setName("override_res"); // NOI18N
         jCheckBox17.addActionListener(new java.awt.event.ActionListener() {
