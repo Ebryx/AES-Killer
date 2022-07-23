@@ -5,8 +5,18 @@
  */
 package burp;
 
+import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JOptionPane;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+
+
 
 /**
  *
@@ -22,9 +32,10 @@ public class AES_Killer extends javax.swing.JPanel {
     
     public AES_Killer(BurpExtender _b) {
         this._burpObj = _b;
+        //this.callbacks = _b.callbacks;
         initComponents();
-        
-        
+
+        //_b.callbacks.
         
         this.jCheckBox9.setSelected(true);
         this.jCheckBox10.setSelected(true);
@@ -36,6 +47,89 @@ public class AES_Killer extends javax.swing.JPanel {
         this.jCheckBox11.setEnabled(false);
         this.jCheckBox12.setEnabled(false);
     }
+
+    private void loadConfig(){
+
+            String AesKillerConfig = _burpObj.callbacks.loadExtensionSetting("AES_Killer_Data");
+
+            try {
+                Gson gson = new Gson();
+                Type confMapType = new TypeToken<Map<String, Object>>() {
+                }.getType();
+                Map<String, Object> map = gson.fromJson(AesKillerConfig, confMapType);
+
+
+                jTextField1.setText(map.get("jTextField1").toString());
+                jTextField2.setText(map.get("jTextField2").toString());
+                jTextField3.setText(map.get("jTextField3").toString());
+                jTextField4.setText(map.get("jTextField4").toString());
+                jTextField5.setText(map.get("jTextField5").toString());
+                jTextField6.setText(map.get("jTextField6").toString());
+                jTextField7.setText(map.get("jTextField7").toString());
+
+                jCheckBox1.setSelected(Boolean.parseBoolean(map.get("jCheckBox1").toString()));
+                jCheckBox2.setSelected(Boolean.parseBoolean(map.get("jCheckBox2").toString()));
+                jCheckBox3.setSelected(Boolean.parseBoolean(map.get("jCheckBox3").toString()));
+                jCheckBox4.setSelected(Boolean.parseBoolean(map.get("jCheckBox4").toString()));
+                jCheckBox5.setSelected(Boolean.parseBoolean(map.get("jCheckBox5").toString()));
+                jCheckBox6.setSelected(Boolean.parseBoolean(map.get("jCheckBox6").toString()));
+                jCheckBox7.setSelected(Boolean.parseBoolean(map.get("jCheckBox7").toString()));
+                jCheckBox8.setSelected(Boolean.parseBoolean(map.get("jCheckBox8").toString()));
+                jCheckBox13.setSelected(Boolean.parseBoolean(map.get("jCheckBox13").toString()));
+                jCheckBox14.setSelected(Boolean.parseBoolean(map.get("jCheckBox14").toString()));
+                jCheckBox15.setSelected(Boolean.parseBoolean(map.get("jCheckBox15").toString()));
+                jCheckBox16.setSelected(Boolean.parseBoolean(map.get("jCheckBox16").toString()));
+                jCheckBox17.setSelected(Boolean.parseBoolean(map.get("jCheckBox17").toString()));
+
+                jComboBox1.setSelectedItem(map.get("jComboBox1"));
+                _burpObj.callbacks.printOutput(AesKillerConfig);
+                _burpObj.callbacks.printOutput("AESKiller config loaded !");
+            } catch (RuntimeException e) {
+                _burpObj.callbacks.printError(e.toString());
+                _burpObj.callbacks.printOutput("Error load AESKiller config !");
+            }
+
+    }
+
+    private void saveConfig(){
+        try {
+            Object obj = this;
+            Map<String, Object> map = new HashMap<>();
+            // Convert a map having list of values.
+            map.put("jTextField7", jTextField7.getText());
+            map.put("jCheckBox8", jCheckBox8.isSelected());
+            map.put("jCheckBox13", jCheckBox13.isSelected());
+            map.put("jCheckBox14", jCheckBox14.isSelected());
+            map.put("jComboBox1", jComboBox1.getSelectedItem());
+            map.put("jTextField1", jTextField1.getText());
+            map.put("jTextField2", jTextField2.getText());
+            map.put("jCheckBox1", jCheckBox1.isSelected());
+            map.put("jTextField5", jTextField5.getText());
+            map.put("jTextField6", jTextField6.getText());
+            map.put("jCheckBox2", jCheckBox2.isSelected());
+            map.put("jCheckBox3", jCheckBox3.isSelected());
+            map.put("jTextField3", jTextField3.getText());
+            map.put("jCheckBox6", jCheckBox6.isSelected());
+            map.put("jCheckBox16", jCheckBox16.isSelected());
+            map.put("jCheckBox4", jCheckBox4.isSelected());
+            map.put("jCheckBox5", jCheckBox5.isSelected());
+            map.put("jTextField4", jTextField4.getText());
+            map.put("jCheckBox7", jCheckBox7.isSelected());
+            map.put("jCheckBox15", jCheckBox15.isSelected());
+            map.put("jCheckBox17", jCheckBox17.isSelected());
+
+            String AesKillerConfig = new Gson().toJson(map);
+
+            _burpObj.callbacks.saveExtensionSetting("AES_Killer_Data", AesKillerConfig);
+            _burpObj.callbacks.printOutput(AesKillerConfig);
+            _burpObj.callbacks.printOutput("AESKiller config saved !");
+        }
+        catch (RuntimeException e) {
+            _burpObj.callbacks.printError(e.toString());
+            //this.callbacks.printOutput(e.toString());
+        }
+    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -576,6 +670,8 @@ public class AES_Killer extends javax.swing.JPanel {
         jSplitPane1.setRightComponent(jPanel11);
 
         add(jSplitPane1);
+
+        loadConfig();
     }// </editor-fold>//GEN-END:initComponents
 
     public Boolean is_string_empty(String _str){
@@ -742,7 +838,9 @@ public class AES_Killer extends javax.swing.JPanel {
         // Change Enable / Disable Button
         this.jButton2.setEnabled(false);
         this.jButton1.setEnabled(true);
-        
+
+        saveConfig();
+
         JOptionPane.showMessageDialog(this, "AES Killer started !!!"); 
         
     }//GEN-LAST:event_jButton2ActionPerformed

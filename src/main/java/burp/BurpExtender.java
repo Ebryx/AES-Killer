@@ -17,11 +17,13 @@ import javax.crypto.spec.SecretKeySpec;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 
+
+
 /**
  *
  * @author n00b
  */
-public class BurpExtender implements IBurpExtender, ITab, IHttpListener, IProxyListener {
+public class BurpExtender implements IBurpExtender, ITab, IHttpListener, IProxyListener, IMessageEditorTabFactory {
     
     public String ExtensionName =  "AES Killer";
     public String TabName =  "AES Killer";
@@ -75,6 +77,7 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener, IProxyL
         
         _aes_killer = new AES_Killer(this);
         this.callbacks.addSuiteTab(this);
+        this.callbacks.registerMessageEditorTabFactory(this);
         this.stdout.println("AES_Killer Installed !!!");
     }
 
@@ -146,7 +149,7 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener, IProxyL
             cipher = Cipher.getInstance(this._enc_type);
             //sec_key = new SecretKeySpec(this.helpers.base64Decode(this._secret_key),"AES");
             //sec_key = new SecretKeySpec(this.helpers.base64Decode(this._secret_key),"GOST3412-2015");
-	    String alg = this._enc_type.split("/")[0];
+            String alg = this._enc_type.split("/")[0];
             sec_key = new SecretKeySpec(this.helpers.base64Decode(this._secret_key),alg);
             
             if (this._exclude_iv){
@@ -171,10 +174,10 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener, IProxyL
     public String do_encrypt(String _dec_str){
         try{
             cipher = Cipher.getInstance(this._enc_type);
+            String alg = this._enc_type.split("/")[0];
+            sec_key = new SecretKeySpec(this.helpers.base64Decode(this._secret_key),alg);
             //sec_key = new SecretKeySpec(this.helpers.base64Decode(this._secret_key),"GOST3412-2015");
             //sec_key = new SecretKeySpec(this.helpers.base64Decode(this._secret_key),"AES");
-	    String alg = this._enc_type.split("/")[0];
-            sec_key = new SecretKeySpec(this.helpers.base64Decode(this._secret_key),alg);
             
             if (this._exclude_iv){
                 cipher.init(Cipher.ENCRYPT_MODE, sec_key);
@@ -376,9 +379,6 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener, IProxyL
         }
     }
 
-    
-    
-    
     @Override
     public void processHttpMessage(int toolFlag, boolean messageIsRequest, IHttpRequestResponse messageInfo) {
         if (messageIsRequest) {
@@ -473,13 +473,116 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener, IProxyL
         }
     }
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    @Override
+    public IMessageEditorTab createNewInstance(IMessageEditorController controller, boolean editable)
+    {
+        // create a new instance of our custom editor tab
+        return new AESDecoderTab(controller, editable, this._is_req_body, this._is_req_param, this._req_param);
+    }
+
+    class AESDecoderTab implements IMessageEditorTab
+    {
+        private boolean editable;
+
+
+        private ITextEditor txtInput;
+        private byte[] currentMessage;
+
+        public AESDecoderTab(IMessageEditorController controller, boolean editable, boolean is_req_body,
+                              boolean is_req_param, String[] req_param)
+        {
+            this.editable = editable;
+
+            // create an instance of Burp's text editor, to display our deserialized data
+            txtInput = callbacks.createTextEditor();
+            txtInput.setEditable(editable);
+        }
+
+        //
+        // implement IMessageEditorTab
+        //
+
+        @Override
+        public String getTabCaption()
+        {
+            return "AESKiller Decoder";
+        }
+
+        @Override
+        public Component getUiComponent()
+        {
+            return txtInput.getComponent();
+        }
+
+        @Override
+        public boolean isEnabled(byte[] content, boolean isRequest)
+        {
+            // enable this tab for requests
+            return isRequest;
+        }
+
+        @Override
+        public void setMessage(byte[] content, boolean isRequest)
+        {
+            if (content == null)
+            {
+                // clear our display
+                txtInput.setText(null);
+                txtInput.setEditable(false);
+            }
+            else {
+                if (isRequest) {
+                    IRequestInfo reqInfo = helpers.analyzeRequest(content);
+                    //String URL = reqInfo.getUrl().toString();
+                    List headers = reqInfo.getHeaders();
+                    //if (_host.contains(get_host(URL))) {
+                        //if ((Base64InputTab)this.this$0._is_req_body) {
+                        if (BurpExtender.this._is_req_body) {
+                            // decrypting request body
+                            String tmpreq = content.toString();
+                            String messageBody = new String(tmpreq.substring(reqInfo.getBodyOffset())).trim();
+                            String decValue = do_decrypt(messageBody);
+                            txtInput.setText(decValue.getBytes());
+                            txtInput.setEditable(editable);
+                        } else if (BurpExtender.this._is_req_param) {
+                            byte[] _request = content;
+                            if (reqInfo.getContentType() == IRequestInfo.CONTENT_TYPE_JSON) {
+                                _request = update_req_params_json(_request, headers, BurpExtender.this._req_param, false);
+                            } else {
+                                _request = update_req_params(_request, headers, BurpExtender.this._req_param, false);
+                            }
+                            txtInput.setText(_request);
+                            txtInput.setEditable(editable);
+                        } else {
+                            return;
+                        }
+
+                    //}
+
+
+                }
+            }
+
+        }
+
+        @Override
+        public byte[] getMessage()
+        {
+            return null;
+        }
+
+        @Override
+        public boolean isModified()
+        {
+            return txtInput.isTextModified();
+        }
+
+        @Override
+        public byte[] getSelectedData()
+        {
+            return txtInput.getSelectedText();
+        }
+    }
+
+
 }

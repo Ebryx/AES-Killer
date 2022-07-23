@@ -12,6 +12,7 @@ repositories {
 dependencies {
     implementation 'net.portswigger.burp.extender:burp-extender-api:2.1'
     implementation 'org.bouncycastle:bcprov-jdk15on:1.68'
+    implementation 'com.google.code.gson:gson:2.7'
 }
 
 jar {
