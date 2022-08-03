@@ -19,7 +19,7 @@
 - The IProxyListener decrypt requests and encrypt responses, and an IHttpListener than encrypt requests and decrypt responses. 
 - Burp sees the decrypted traffic, including Repeater, Intruder and Scanner, but the client/mobile app and server see the encrypted version.
 
-***NOTE:*** Currently support `AES/CBC/PKCS5Padding` && `AES/ECB/PKCS5Padding` encryption/decryption.
+***NOTE:*** Currently support `AES/CBC/PKCS5Padding` && `AES/ECB/PKCS5Padding` && `GOST3412/EBC/PKCS7Padding`encryption/decryption.
 
 ### How it works
 - Require **Secret Key** and **Initialize Vector** which can be obtained by using <a href="https://github.com/d3vilbug/demo-example-code-snippets/blob/master/AES_Killer%20-%20Mobile%20App%20Demo/aes-hook.js" target="_blank">aes-hook.js</a> and <a href="https://github.com/d3vilbug/demo-example-code-snippets/blob/master/AES_Killer%20-%20Mobile%20App%20Demo/frida-hook.py" target=_blank>frida-hook.py</a> or by reversing the application (For iOS please use <a href="https://github.com/noobpk/frida-ios-hook">Frida iOS Hook</a> to get AES Secret Key and IV)
