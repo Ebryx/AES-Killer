@@ -8,20 +8,26 @@ package burp;
 import java.awt.Component;
 import java.io.PrintWriter;
 import java.net.URL;
+import java.security.Security;
 import java.util.List;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+
+
+
+
 /**
  *
  * @author n00b
  */
-public class BurpExtender implements IBurpExtender, ITab, IHttpListener, IProxyListener {
+public class BurpExtender implements IBurpExtender, ITab, IHttpListener, IProxyListener, IMessageEditorTabFactory {
     
     public String ExtensionName =  "AES Killer";
     public String TabName =  "AES Killer";
-    public String _Header = "AES: Killer";
+    public String _Header = "Aes: Killer";
     AES_Killer _aes_killer;
     
     public IBurpExtenderCallbacks callbacks;
@@ -49,6 +55,8 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener, IProxyL
     public Boolean _ignore_response = false;
     public Boolean _do_off = false;
     public Boolean _url_enc_dec = false;
+    public Boolean _req_tab = false;
+    //public Boolean _resp_tab = false;
     public Boolean _is_req_body = false;
     public Boolean _is_res_body = false;
     public Boolean _is_req_param = false;
@@ -71,6 +79,7 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener, IProxyL
         
         _aes_killer = new AES_Killer(this);
         this.callbacks.addSuiteTab(this);
+        this.callbacks.registerMessageEditorTabFactory(this);
         this.stdout.println("AES_Killer Installed !!!");
     }
 
@@ -138,8 +147,12 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener, IProxyL
     
     public String do_decrypt(String _enc_str){
         try{
+            Security.addProvider(new BouncyCastleProvider());
             cipher = Cipher.getInstance(this._enc_type);
-            sec_key = new SecretKeySpec(this.helpers.base64Decode(this._secret_key),"AES");
+            //sec_key = new SecretKeySpec(this.helpers.base64Decode(this._secret_key),"AES");
+            //sec_key = new SecretKeySpec(this.helpers.base64Decode(this._secret_key),"GOST3412-2015");
+            String alg = this._enc_type.split("/")[0];
+            sec_key = new SecretKeySpec(this.helpers.base64Decode(this._secret_key),alg);
             
             if (this._exclude_iv){
                 cipher.init(Cipher.DECRYPT_MODE, sec_key);
@@ -163,7 +176,10 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener, IProxyL
     public String do_encrypt(String _dec_str){
         try{
             cipher = Cipher.getInstance(this._enc_type);
-            sec_key = new SecretKeySpec(this.helpers.base64Decode(this._secret_key),"AES");
+            String alg = this._enc_type.split("/")[0];
+            sec_key = new SecretKeySpec(this.helpers.base64Decode(this._secret_key),alg);
+            //sec_key = new SecretKeySpec(this.helpers.base64Decode(this._secret_key),"GOST3412-2015");
+            //sec_key = new SecretKeySpec(this.helpers.base64Decode(this._secret_key),"AES");
             
             if (this._exclude_iv){
                 cipher.init(Cipher.ENCRYPT_MODE, sec_key);
@@ -277,7 +293,8 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener, IProxyL
             String URL = new String(reqInfo.getUrl().toString());
             List headers = reqInfo.getHeaders();
             
-            if(this._host.contains(get_host(URL))) {
+            //if(this._host.contains(get_host(URL))) {
+            if(URL.contains(this._host)) {
                 
                 if(this._is_req_body) {
                     // decrypting request body
@@ -319,7 +336,8 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener, IProxyL
             String URL = new String(reqInfo.getUrl().toString());
             List headers = resInfo.getHeaders();
             
-            if(this._host.contains(this.get_host(URL))){
+            //if(this._host.contains(this.get_host(URL))){
+            if(URL.contains(this._host)) {
                 
                 if(!headers.contains(this._Header)){ return; }
                 
@@ -365,9 +383,6 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener, IProxyL
         }
     }
 
-    
-    
-    
     @Override
     public void processHttpMessage(int toolFlag, boolean messageIsRequest, IHttpRequestResponse messageInfo) {
         if (messageIsRequest) {
@@ -377,7 +392,8 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener, IProxyL
             
             if(!headers.contains(this._Header)){ return; }
             
-            if(this._host.contains(get_host(URL))){
+            //if(this._host.contains(get_host(URL))){
+            if(URL.contains(this._host)) {
                 if(this._is_req_body) {
                     String tmpreq = new String(messageInfo.getRequest());
                     String messageBody = new String(tmpreq.substring(reqInfo.getBodyOffset())).trim();
@@ -432,7 +448,8 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener, IProxyL
             List headers = resInfo.getHeaders();
             
             
-            if(this._host.contains(this.get_host(URL))){
+            //if(this._host.contains(this.get_host(URL))){
+            if(URL.contains(this._host)) {
                 
                 if(this._is_res_body){
                     // Complete Response Body decryption
@@ -462,13 +479,147 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener, IProxyL
         }
     }
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    @Override
+    public IMessageEditorTab createNewInstance(IMessageEditorController controller, boolean editable)
+    {
+        // create a new instance of our custom editor tab
+        return new AESDecoderTab(controller, editable, this._is_req_body, this._is_req_param, this._req_param);
+    }
+
+    class AESDecoderTab implements IMessageEditorTab
+    {
+        private boolean editable;
+
+
+        private ITextEditor txtInput;
+        private byte[] currentMessage;
+
+        public AESDecoderTab(IMessageEditorController controller, boolean editable, boolean is_req_body,
+                              boolean is_req_param, String[] req_param)
+        {
+            this.editable = editable;
+
+            // create an instance of Burp's text editor, to display our deserialized data
+            txtInput = callbacks.createTextEditor();
+            txtInput.setEditable(editable);
+        }
+
+        //
+            // implement IMessageEditorTab
+        //
+
+        @Override
+        public String getTabCaption()
+        {
+            return "AESKiller Decoder";
+        }
+
+        @Override
+        public Component getUiComponent()
+        {
+            return txtInput.getComponent();
+        }
+
+        @Override
+        public boolean isEnabled(byte[] content, boolean isRequest)
+        {
+            // enable this tab for requests
+            if (BurpExtender.this._req_tab) {
+                   return true;
+                }
+            return false;
+        }
+
+        @Override
+        public void setMessage(byte[] content, boolean isRequest)
+        {
+            if (content == null)
+            {
+                // clear our display
+                txtInput.setText(null);
+                txtInput.setEditable(false);
+            }
+            else {
+                if (isRequest && BurpExtender.this._req_tab ) {
+                    IRequestInfo reqInfo = helpers.analyzeRequest(content);
+                    String URL = "";
+                    List headers = reqInfo.getHeaders();
+                    String[] tmp =  reqInfo.getHeaders().get(1).split(" ");
+                    if (tmp.length >1 ){
+                        URL = reqInfo.getHeaders().get(1).split(" ")[1];
+                    }
+                    if (URL.contains(_host)) {
+                        //if ((Base64InputTab)this.this$0._is_req_body) {
+                        if (BurpExtender.this._is_req_body) {
+                            // decrypting request body
+                            String tmpreq = content.toString();
+                            String messageBody = new String(tmpreq.substring(reqInfo.getBodyOffset())).trim();
+                            String decValue = do_decrypt(messageBody);
+                            txtInput.setText(decValue.getBytes());
+                            txtInput.setEditable(editable);
+                        } else if (BurpExtender.this._is_req_param) {
+                            byte[] _request = content;
+                            if (reqInfo.getContentType() == IRequestInfo.CONTENT_TYPE_JSON) {
+                                _request = update_req_params_json(_request, headers, BurpExtender.this._req_param, false);
+                            } else {
+                                _request = update_req_params(_request, headers, BurpExtender.this._req_param, false);
+                            }
+                            txtInput.setText(_request);
+                            txtInput.setEditable(editable);
+                        } else {
+                            return;
+                        }
+
+                    }
+
+
+                }
+                if (!isRequest && BurpExtender.this._req_tab ) {
+                    IResponseInfo respInfo = helpers.analyzeResponse(content);
+                    List headers = respInfo.getHeaders();
+                    if (BurpExtender.this._is_req_body) {
+                        // decrypting response body
+                        String tmpreq = content.toString();
+                        String messageBody = new String(tmpreq.substring(respInfo.getBodyOffset())).trim();
+                        String decValue = do_decrypt(messageBody);
+                        txtInput.setText(decValue.getBytes());
+                        txtInput.setEditable(editable);
+                    } else if (BurpExtender.this._is_req_param) {
+                        byte[] _request = content;
+
+                        if (respInfo.getStatedMimeType().contains("JSON")) {
+                            _request = update_req_params_json(_request, headers, BurpExtender.this._res_param, false);
+                        } else {
+                            _request = update_req_params(_request, headers, BurpExtender.this._res_param, false);
+                        }
+                        txtInput.setText(_request);
+                        txtInput.setEditable(editable);
+                    } else {
+                        return;
+                    }
+                }
+            }
+
+        }
+
+        @Override
+        public byte[] getMessage()
+        {
+            return null;
+        }
+
+        @Override
+        public boolean isModified()
+        {
+            return txtInput.isTextModified();
+        }
+
+        @Override
+        public byte[] getSelectedData()
+        {
+            return txtInput.getSelectedText();
+        }
+    }
+
+
 }

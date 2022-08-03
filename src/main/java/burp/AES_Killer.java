@@ -5,8 +5,18 @@
  */
 package burp;
 
+import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JOptionPane;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+
+
 
 /**
  *
@@ -22,9 +32,10 @@ public class AES_Killer extends javax.swing.JPanel {
     
     public AES_Killer(BurpExtender _b) {
         this._burpObj = _b;
+        //this.callbacks = _b.callbacks;
         initComponents();
-        
-        
+
+        //_b.callbacks.
         
         this.jCheckBox9.setSelected(true);
         this.jCheckBox10.setSelected(true);
@@ -36,6 +47,93 @@ public class AES_Killer extends javax.swing.JPanel {
         this.jCheckBox11.setEnabled(false);
         this.jCheckBox12.setEnabled(false);
     }
+
+    private void loadConfig(){
+
+            String AesKillerConfig = _burpObj.callbacks.loadExtensionSetting("AES_Killer_Data");
+
+            try {
+                Gson gson = new Gson();
+                Type confMapType = new TypeToken<Map<String, Object>>() {
+                }.getType();
+                Map<String, Object> map = gson.fromJson(AesKillerConfig, confMapType);
+
+
+                jTextField1.setText(map.get("jTextField1").toString());
+                jTextField2.setText(map.get("jTextField2").toString());
+                jTextField3.setText(map.get("jTextField3").toString());
+                jTextField4.setText(map.get("jTextField4").toString());
+                jTextField5.setText(map.get("jTextField5").toString());
+                jTextField6.setText(map.get("jTextField6").toString());
+                jTextField7.setText(map.get("jTextField7").toString());
+
+                jCheckBox1.setSelected(Boolean.parseBoolean(map.get("jCheckBox1").toString()));
+                jCheckBox2.setSelected(Boolean.parseBoolean(map.get("jCheckBox2").toString()));
+                jCheckBox3.setSelected(Boolean.parseBoolean(map.get("jCheckBox3").toString()));
+                jCheckBox4.setSelected(Boolean.parseBoolean(map.get("jCheckBox4").toString()));
+                jCheckBox5.setSelected(Boolean.parseBoolean(map.get("jCheckBox5").toString()));
+                jCheckBox6.setSelected(Boolean.parseBoolean(map.get("jCheckBox6").toString()));
+                jCheckBox7.setSelected(Boolean.parseBoolean(map.get("jCheckBox7").toString()));
+                jCheckBox8.setSelected(Boolean.parseBoolean(map.get("jCheckBox8").toString()));
+                jCheckBox13.setSelected(Boolean.parseBoolean(map.get("jCheckBox13").toString()));
+                jCheckBox14.setSelected(Boolean.parseBoolean(map.get("jCheckBox14").toString()));
+                jCheckBox15.setSelected(Boolean.parseBoolean(map.get("jCheckBox15").toString()));
+                jCheckBox16.setSelected(Boolean.parseBoolean(map.get("jCheckBox16").toString()));
+                jCheckBox17.setSelected(Boolean.parseBoolean(map.get("jCheckBox17").toString()));
+                jCheckBox18.setSelected(Boolean.parseBoolean(map.get("jCheckBox18").toString()));
+                //jCheckBox19.setSelected(Boolean.parseBoolean(map.get("jCheckBox19").toString()));
+
+                jComboBox1.setSelectedItem(map.get("jComboBox1"));
+                _burpObj.callbacks.printOutput(AesKillerConfig);
+                _burpObj.callbacks.printOutput("AESKiller config loaded !");
+            } catch (RuntimeException e) {
+                _burpObj.callbacks.printError(e.toString());
+                _burpObj.callbacks.printOutput("Error load AESKiller config !");
+            }
+
+    }
+
+    private void saveConfig(){
+        try {
+            Object obj = this;
+            Map<String, Object> map = new HashMap<>();
+            // Convert a map having list of values.
+            map.put("jTextField7", jTextField7.getText());
+            map.put("jCheckBox8", jCheckBox8.isSelected());
+            map.put("jCheckBox13", jCheckBox13.isSelected());
+            map.put("jCheckBox14", jCheckBox14.isSelected());
+            map.put("jComboBox1", jComboBox1.getSelectedItem());
+            map.put("jTextField1", jTextField1.getText());
+            map.put("jTextField2", jTextField2.getText());
+            map.put("jCheckBox1", jCheckBox1.isSelected());
+            map.put("jTextField5", jTextField5.getText());
+            map.put("jTextField6", jTextField6.getText());
+            map.put("jCheckBox2", jCheckBox2.isSelected());
+            map.put("jCheckBox3", jCheckBox3.isSelected());
+            map.put("jTextField3", jTextField3.getText());
+            map.put("jCheckBox6", jCheckBox6.isSelected());
+            map.put("jCheckBox16", jCheckBox16.isSelected());
+            map.put("jCheckBox4", jCheckBox4.isSelected());
+            map.put("jCheckBox5", jCheckBox5.isSelected());
+            map.put("jTextField4", jTextField4.getText());
+            map.put("jCheckBox7", jCheckBox7.isSelected());
+            map.put("jCheckBox15", jCheckBox15.isSelected());
+            map.put("jCheckBox17", jCheckBox17.isSelected());
+            map.put("jCheckBox18", jCheckBox18.isSelected());
+            //map.put("jCheckBox19", jCheckBox19.isSelected());
+
+            String AesKillerConfig = new Gson().toJson(map);
+
+            _burpObj.callbacks.saveExtensionSetting("AES_Killer_Data", AesKillerConfig);
+            _burpObj.callbacks.printOutput(AesKillerConfig);
+            _burpObj.callbacks.printOutput("AESKiller config saved !");
+        }
+        catch (RuntimeException e) {
+            _burpObj.callbacks.printError(e.toString());
+            //this.callbacks.printOutput(e.toString());
+        }
+    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -70,6 +168,8 @@ public class AES_Killer extends javax.swing.JPanel {
         jCheckBox8 = new javax.swing.JCheckBox();
         jCheckBox13 = new javax.swing.JCheckBox();
         jCheckBox14 = new javax.swing.JCheckBox();
+        jCheckBox18 = new javax.swing.JCheckBox();
+        //jCheckBox19 = new javax.swing.JCheckBox();
         jPanel4 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -210,6 +310,10 @@ public class AES_Killer extends javax.swing.JPanel {
 
         jCheckBox14.setText("URL encode/decode");
 
+        jCheckBox18.setText("Req/Resp tab");
+
+        //jCheckBox19.setText("Response tab");
+
         javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
         jPanel12.setLayout(jPanel12Layout);
         jPanel12Layout.setHorizontalGroup(
@@ -220,18 +324,27 @@ public class AES_Killer extends javax.swing.JPanel {
                     .addComponent(jCheckBox8)
                     .addComponent(jCheckBox14)
                     .addComponent(jCheckBox13))
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jCheckBox18))
+                    //.addComponent(jCheckBox19))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel12Layout.setVerticalGroup(
             jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel12Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jCheckBox8)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox14)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jCheckBox13)
-                .addContainerGap())
+                    .addGroup(jPanel12Layout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(jCheckBox8)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jCheckBox14)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jCheckBox13))
+                    .addGroup(jPanel12Layout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(jCheckBox18)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            //.addComponent(jCheckBox19)
+                            .addContainerGap())
+
         );
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
@@ -254,7 +367,7 @@ public class AES_Killer extends javax.swing.JPanel {
                             .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addComponent(jTextField7))
                     .addComponent(jLabel8))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 434, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 430, Short.MAX_VALUE)
                 .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -292,7 +405,7 @@ public class AES_Killer extends javax.swing.JPanel {
 
         jLabel1.setText("Select Encryption");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "AES/CBC/PKCS5Padding", "AES/ECB/PKCS5Padding" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "AES/CBC/PKCS5Padding", "AES/ECB/PKCS5Padding", "GOST3412-2015/ECB/PKCS7Padding" }));
         jComboBox1.setName("encryption_type"); // NOI18N
 
         jLabel2.setText("Secret Key (Base64 Encoded)");
@@ -403,13 +516,14 @@ public class AES_Killer extends javax.swing.JPanel {
 
         jTextField3.setName("req_parameter"); // NOI18N
 
-        buttonGroup3.add(jCheckBox6);
+        //buttonGroup3.add(jCheckBox6);
         jCheckBox6.setText("Override Complete request body (After decrypting - Form)");
         jCheckBox6.setName("override_req"); // NOI18N
 
-        buttonGroup3.add(jCheckBox16);
+        //buttonGroup3.add(jCheckBox16);
         jCheckBox16.setText("Override Complete request body (After decrypting - JSON)");
         jCheckBox16.setName("override_req"); // NOI18N
+
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -461,7 +575,7 @@ public class AES_Killer extends javax.swing.JPanel {
 
         jTextField4.setName("req_parameter"); // NOI18N
 
-        buttonGroup4.add(jCheckBox7);
+        //buttonGroup4.add(jCheckBox7);
         jCheckBox7.setText("Override Complete response body (After decrypting - Form)");
         jCheckBox7.setName("override_res"); // NOI18N
         jCheckBox7.addActionListener(new java.awt.event.ActionListener() {
@@ -473,7 +587,7 @@ public class AES_Killer extends javax.swing.JPanel {
         buttonGroup1.add(jCheckBox15);
         jCheckBox15.setText("Ignore Response");
 
-        buttonGroup4.add(jCheckBox17);
+        //buttonGroup4.add(jCheckBox17);
         jCheckBox17.setText("Override Complete response body (After decrypting - JSON)");
         jCheckBox17.setName("override_res"); // NOI18N
         jCheckBox17.addActionListener(new java.awt.event.ActionListener() {
@@ -575,6 +689,8 @@ public class AES_Killer extends javax.swing.JPanel {
         jSplitPane1.setRightComponent(jPanel11);
 
         add(jSplitPane1);
+
+        loadConfig();
     }// </editor-fold>//GEN-END:initComponents
 
     public Boolean is_string_empty(String _str){
@@ -587,15 +703,16 @@ public class AES_Killer extends javax.swing.JPanel {
     
     public Boolean validate_host(){
         String _url = this.jTextField7.getText().trim();
-        if(is_string_empty(_url)){ JOptionPane.showMessageDialog(this, "Please provide a Host URL !!!"); return false; }
+        if(is_string_empty(_url)){ JOptionPane.showMessageDialog(this, "Please provide a part of Host domain !!!"); return false; }
         
         try{
             URL abc = new URL(_url);
             this._burpObj._host = abc.getHost();
             return true;
         }catch (Exception ex){
-            JOptionPane.showMessageDialog(this, "Please provide a valid Host URL (e.g https://abc.com) !!!");
-            return false;
+            //JOptionPane.showMessageDialog(this, "Please provide a part of Host domain (e.g abc.com) !!!");
+            this._burpObj._host = _url;
+            return true;
         }
     }
     
@@ -651,6 +768,19 @@ public class AES_Killer extends javax.swing.JPanel {
         }
         return true;
     }
+
+    public Boolean validate_req_tab(){
+        if(this.jCheckBox18.isSelected()){
+            this._burpObj._req_tab = true;
+            return true;
+        }else {
+            this._burpObj._req_tab = false;
+            return false;
+        }
+        //return false;
+    }
+
+
     
     public Boolean validate_request_params(){
         if(this.jCheckBox2.isSelected()){
@@ -728,7 +858,11 @@ public class AES_Killer extends javax.swing.JPanel {
         
         // Validate Debug Mode
         validate_debug_mode();
-        
+
+        //Validate request / response tabs
+        //validate_resp_tab();
+        validate_req_tab();
+
         // Validate Request
         if(!validate_request_params()) { return; }
         
@@ -741,8 +875,10 @@ public class AES_Killer extends javax.swing.JPanel {
         // Change Enable / Disable Button
         this.jButton2.setEnabled(false);
         this.jButton1.setEnabled(true);
-        
-        JOptionPane.showMessageDialog(this, "AES Killer started !!!"); 
+
+        saveConfig();
+
+        //JOptionPane.showMessageDialog(this, "AES Killer started !!!");
         
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -757,7 +893,7 @@ public class AES_Killer extends javax.swing.JPanel {
         this.jButton2.setEnabled(true);
         this.jButton1.setEnabled(false);
         
-        JOptionPane.showMessageDialog(this, "AES Killer stopped !!!");
+        //JOptionPane.showMessageDialog(this, "AES Killer stopped !!!");
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jCheckBox17ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox17ActionPerformed
@@ -836,6 +972,8 @@ public class AES_Killer extends javax.swing.JPanel {
     private javax.swing.JCheckBox jCheckBox15;
     private javax.swing.JCheckBox jCheckBox16;
     private javax.swing.JCheckBox jCheckBox17;
+    private javax.swing.JCheckBox jCheckBox18;
+    //private javax.swing.JCheckBox jCheckBox19;
     private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JCheckBox jCheckBox3;
     private javax.swing.JCheckBox jCheckBox4;
