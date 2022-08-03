@@ -55,6 +55,8 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener, IProxyL
     public Boolean _ignore_response = false;
     public Boolean _do_off = false;
     public Boolean _url_enc_dec = false;
+    public Boolean _req_tab = false;
+    //public Boolean _resp_tab = false;
     public Boolean _is_req_body = false;
     public Boolean _is_res_body = false;
     public Boolean _is_req_param = false;
@@ -291,7 +293,8 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener, IProxyL
             String URL = new String(reqInfo.getUrl().toString());
             List headers = reqInfo.getHeaders();
             
-            if(this._host.contains(get_host(URL))) {
+            //if(this._host.contains(get_host(URL))) {
+            if(URL.contains(this._host)) {
                 
                 if(this._is_req_body) {
                     // decrypting request body
@@ -333,7 +336,8 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener, IProxyL
             String URL = new String(reqInfo.getUrl().toString());
             List headers = resInfo.getHeaders();
             
-            if(this._host.contains(this.get_host(URL))){
+            //if(this._host.contains(this.get_host(URL))){
+            if(URL.contains(this._host)) {
                 
                 if(!headers.contains(this._Header)){ return; }
                 
@@ -388,7 +392,8 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener, IProxyL
             
             if(!headers.contains(this._Header)){ return; }
             
-            if(this._host.contains(get_host(URL))){
+            //if(this._host.contains(get_host(URL))){
+            if(URL.contains(this._host)) {
                 if(this._is_req_body) {
                     String tmpreq = new String(messageInfo.getRequest());
                     String messageBody = new String(tmpreq.substring(reqInfo.getBodyOffset())).trim();
@@ -443,7 +448,8 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener, IProxyL
             List headers = resInfo.getHeaders();
             
             
-            if(this._host.contains(this.get_host(URL))){
+            //if(this._host.contains(this.get_host(URL))){
+            if(URL.contains(this._host)) {
                 
                 if(this._is_res_body){
                     // Complete Response Body decryption
@@ -499,7 +505,7 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener, IProxyL
         }
 
         //
-        // implement IMessageEditorTab
+            // implement IMessageEditorTab
         //
 
         @Override
@@ -518,7 +524,10 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener, IProxyL
         public boolean isEnabled(byte[] content, boolean isRequest)
         {
             // enable this tab for requests
-            return isRequest;
+            if (BurpExtender.this._req_tab) {
+                   return true;
+                }
+            return false;
         }
 
         @Override
@@ -531,11 +540,15 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener, IProxyL
                 txtInput.setEditable(false);
             }
             else {
-                if (isRequest) {
+                if (isRequest && BurpExtender.this._req_tab ) {
                     IRequestInfo reqInfo = helpers.analyzeRequest(content);
-                    //String URL = reqInfo.getUrl().toString();
+                    String URL = "";
                     List headers = reqInfo.getHeaders();
-                    //if (_host.contains(get_host(URL))) {
+                    String[] tmp =  reqInfo.getHeaders().get(1).split(" ");
+                    if (tmp.length >1 ){
+                        URL = reqInfo.getHeaders().get(1).split(" ")[1];
+                    }
+                    if (URL.contains(_host)) {
                         //if ((Base64InputTab)this.this$0._is_req_body) {
                         if (BurpExtender.this._is_req_body) {
                             // decrypting request body
@@ -557,9 +570,33 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener, IProxyL
                             return;
                         }
 
-                    //}
+                    }
 
 
+                }
+                if (!isRequest && BurpExtender.this._req_tab ) {
+                    IResponseInfo respInfo = helpers.analyzeResponse(content);
+                    List headers = respInfo.getHeaders();
+                    if (BurpExtender.this._is_req_body) {
+                        // decrypting response body
+                        String tmpreq = content.toString();
+                        String messageBody = new String(tmpreq.substring(respInfo.getBodyOffset())).trim();
+                        String decValue = do_decrypt(messageBody);
+                        txtInput.setText(decValue.getBytes());
+                        txtInput.setEditable(editable);
+                    } else if (BurpExtender.this._is_req_param) {
+                        byte[] _request = content;
+
+                        if (respInfo.getStatedMimeType().contains("JSON")) {
+                            _request = update_req_params_json(_request, headers, BurpExtender.this._res_param, false);
+                        } else {
+                            _request = update_req_params(_request, headers, BurpExtender.this._res_param, false);
+                        }
+                        txtInput.setText(_request);
+                        txtInput.setEditable(editable);
+                    } else {
+                        return;
+                    }
                 }
             }
 
